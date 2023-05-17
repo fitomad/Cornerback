@@ -15,6 +15,6 @@ public protocol Actionable {
     func enable()
     func disable()
     
-    func appendKind(_ kind: Rule.Kind)
-    func removeKind(_ kind: Rule.Kind)
+    func appendConstraint(_ constraint: NetworkConstraint)
+    func removeConstraint(_ constraint: NetworkConstraint)
 }

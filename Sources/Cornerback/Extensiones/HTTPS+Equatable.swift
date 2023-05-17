@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Rule.Kind: Equatable {
+extension NetworkConstraint: Equatable {
     public static func ==(lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
             case (.scheme(let lhsValue), .scheme(let rhsValue)):

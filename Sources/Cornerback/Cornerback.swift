@@ -17,9 +17,9 @@ public final class Cornerback {
     }
     
     @discardableResult
-    public func makeRuleWith(kinds: [Rule.Kind], performAction closure: @escaping CornerbackAction) -> some Actionable {
+    public func makeRuleWith(kinds: [NetworkConstraint], performAction closure: @escaping CornerbackAction) -> some Actionable {
         let rule = Rule()
-        rule.kinds = kinds
+        rule.constraints = kinds
         rule.associatedAction = closure
         
         return rule
@@ -41,11 +41,11 @@ public final class Cornerback {
     }
 
     
-    public func appendKind(_ kind: Rule.Kind, toRuleWithID ruleID: String) {
+    public func appendConstraint(_ constraint: NetworkConstraint, toRuleWithID ruleID: String) {
         
     }
     
-    public func removeKind(_ kind: Rule.Kind, toRuleWithid ruleID: String) {
+    public func removeConstraints(_ contraint: NetworkConstraint, toRuleWithid ruleID: String) {
         
     }
     
@@ -56,9 +56,9 @@ public final class Cornerback {
     
     func checkRulesFor(request: URLRequest) {
         let matchedRules = self.rules.filter { rule in
-            rule.kinds
-                .map { kind in
-                    kind.match(request: request)
+            rule.constraints
+                .map { constraint in
+                    constraint.match(request)
                 }
                 .reduce(true, { $0 && $1 })
         }

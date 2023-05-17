@@ -20,15 +20,15 @@ extension Rule: Actionable {
         Cornerback.shared.disableRuleWith(ruleID: self.ruleID)
     }
     
-    public func appendKind(_ kind: Kind) {
-        self.kinds.append(kind)
+    public func appendConstraint(_ constraint: NetworkConstraint) {
+        self.constraints.append(constraint)
     }
     
-    public func removeKind(_ kind: Kind) {
-        guard let index = self.kinds.firstIndex(of: kind) else {
+    public func removeConstraint(_ constraint: Constraint) {
+        guard let index = self.constraints.firstIndex(of: constraint) else {
             return
         }
         
-        self.kinds.remove(at: index)
+        self.constraints.remove(at: index)
     }
 }
