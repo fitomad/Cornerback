@@ -1,7 +1,7 @@
 import XCTest
 @testable import Cornerback
 
-final class RuleTests: XCTestCase {
+final class ConstraintsTests: XCTestCase {
     func testRuleKindScheme() {
         let schemeOne = Scheme(value: "http")
         let schemeTwo = Scheme(value: "http")
@@ -171,7 +171,7 @@ final class RuleTests: XCTestCase {
     }
 }
 
-extension RuleTests {
+extension ConstraintsTests {
     func makeGitHubURLRequest() -> URLRequest {
         let githubURL = URL(string: "https://github.blog/category/engineering?api=asdf")!
         var githubRequest = URLRequest(url: githubURL)
