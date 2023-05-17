@@ -17,9 +17,9 @@ public final class Cornerback {
     }
     
     @discardableResult
-    public func makeRuleWith(kinds: [any Constraint], performAction closure: @escaping CornerbackAction) -> some Actionable {
+    public func newRuleWith(constraints: [any Constraint], performAction closure: @escaping CornerbackAction) -> some Actionable {
         let rule = Rule()
-        rule.constraints = kinds
+        rule.constraints = constraints
         rule.associatedAction = closure
         
         return rule
@@ -27,26 +27,64 @@ public final class Cornerback {
     
     @discardableResult
     public func removeRuleWith(ruleID: RuleID) -> Bool {
-        return false
+        guard let ruleIndex = self.rules.firstIndex(where: { $0.ruleID == ruleID }) else {
+            return false
+        }
+        
+        self.rules.remove(at: ruleIndex)
+        
+        return true
     }
     
     @discardableResult
     public func enableRuleWith(ruleID: RuleID) -> Bool {
+        let selectedRule = self.rules.first(where: { rule in
+            return rule.ruleID == ruleID
+        })
+        
+        if let selectedRule {
+            selectedRule.isActive = true
+            
+            return true
+        }
+        
         return false
     }
     
     @discardableResult
     public func disableRuleWith(ruleID: RuleID) -> Bool {
+        let selectedRule = self.rules.first(where: { rule in
+            return rule.ruleID == ruleID
+        })
+        
+        if let selectedRule {
+            selectedRule.isActive = false
+            
+            return true
+        }
+        
         return false
     }
 
     
     public func appendConstraint(_ constraint: any Constraint, toRuleWithID ruleID: String) {
+        let selectedRule = self.rules.first(where: { rule in
+            rule.ruleID == ruleID
+        })
         
+        if let selectedRule {
+            selectedRule.appendConstraint(constraint)
+        }
     }
     
     public func removeConstraints(_ contraint: any Constraint, toRuleWithid ruleID: String) {
+        let selectedRule = self.rules.first(where: { rule in
+            rule.ruleID == ruleID
+        })
         
+        if let selectedRule {
+            selectedRule.removeConstraint(contraint)
+        }
     }
     
     func forRequest(_ request: URLRequest, performaAction closure: @escaping CornerbackAction) {
