@@ -12,9 +12,9 @@ public final class Rule {
     }
     
     public private(set) var ruleID: RuleID
-    public private(set) var kinds = [Rule.Kind]()
-    public private(set) var isActive = true
-    public private(set) var associatedAction: CornerbackAction?
+    public internal(set) var kinds = [Rule.Kind]()
+    public internal(set) var isActive = true
+    public internal(set) var associatedAction: CornerbackAction?
     
     public convenience init() {
         let uuidString = UUID().uuidString

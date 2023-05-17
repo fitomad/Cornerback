@@ -17,8 +17,12 @@ public final class Cornerback {
     }
     
     @discardableResult
-    public func makeRuleWith(kinds: [Rule.Kind], performAction closure: @escaping CornerbackAction) -> RuleID {
-        return ""
+    public func makeRuleWith(kinds: [Rule.Kind], performAction closure: @escaping CornerbackAction) -> some Actionable {
+        let rule = Rule()
+        rule.kinds = kinds
+        rule.associatedAction = closure
+        
+        return rule
     }
     
     @discardableResult
@@ -26,20 +30,22 @@ public final class Cornerback {
         return false
     }
     
+    @discardableResult
     public func enableRuleWith(ruleID: RuleID) -> Bool {
         return false
     }
     
+    @discardableResult
     public func disableRuleWith(ruleID: RuleID) -> Bool {
         return false
     }
 
     
-    public func appendKind(_ kind: Any, toRuleWithID ruleID: String) {
+    public func appendKind(_ kind: Rule.Kind, toRuleWithID ruleID: String) {
         
     }
     
-    public func removeKind(_ kind: Any, toRuleWithid ruleID: String) {
+    public func removeKind(_ kind: Rule.Kind, toRuleWithid ruleID: String) {
         
     }
     
