@@ -20,15 +20,13 @@ extension Rule: Actionable {
         Cornerback.shared.disableRuleWith(ruleID: self.ruleID)
     }
     
-    public func appendConstraint(_ constraint: NetworkConstraint) {
+    public func appendConstraint(_ constraint: any Constraint) {
         self.constraints.append(constraint)
     }
     
-    public func removeConstraint(_ constraint: Constraint) {
-        guard let index = self.constraints.firstIndex(of: constraint) else {
-            return
+    public func removeConstraint(_ constraint: any Constraint) {
+        self.constraints = self.constraints.filter {
+            $0.isEqualsTo(constraint) == false
         }
-        
-        self.constraints.remove(at: index)
     }
 }

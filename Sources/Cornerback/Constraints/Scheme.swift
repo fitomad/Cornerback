@@ -8,14 +8,21 @@
 import Foundation
 
 public struct Scheme: Constraint {
-    private let requestScheme: String
+    public let requestScheme: String
     
     public init(value: String) {
         self.requestScheme = value
     }
     
-    public func match(_ request: URLRequest) -> Bool {
-        return false
+    public func match(request: URLRequest) -> Bool {
+        guard let components = components(from: request),
+              let scheme = components.scheme
+        else
+        {
+            return false
+        }
+
+        return scheme == self.requestScheme
     }
 }
 
@@ -24,3 +31,4 @@ extension Scheme: Equatable {
         return lhs.requestScheme == rhs.requestScheme
     }
 }
+

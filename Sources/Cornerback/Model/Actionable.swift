@@ -15,6 +15,6 @@ public protocol Actionable {
     func enable()
     func disable()
     
-    func appendConstraint(_ constraint: NetworkConstraint)
-    func removeConstraint(_ constraint: NetworkConstraint)
+    func appendConstraint(_ constraint: any Constraint)
+    func removeConstraint(_ constraint: any Constraint)
 }

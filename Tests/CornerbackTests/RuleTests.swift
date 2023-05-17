@@ -3,44 +3,44 @@ import XCTest
 
 final class RuleTests: XCTestCase {
     func testRuleKindScheme() {
-        let schemeOne = NetworkConstraint.scheme(value: "http")
-        let schemeTwo = NetworkConstraint.scheme(value: "http")
-        let schemeSecure = NetworkConstraint.scheme(value: "https")
+        let schemeOne = Scheme(value: "http")
+        let schemeTwo = Scheme(value: "http")
+        let schemeSecure = Scheme(value: "https")
         
         XCTAssertEqual(schemeOne, schemeTwo)
         XCTAssertNotEqual(schemeOne, schemeSecure)
     }
     
     func testRuleKindDomain() {
-        let domainOne = NetworkConstraint.domain(name: "github.com")
-        let domainTwo = NetworkConstraint.domain(name: "github.com")
-        let domainFake = NetworkConstraint.domain(name: "falsegithub.com")
+        let domainOne = Domain("github.com")
+        let domainTwo = Domain("github.com")
+        let domainFake = Domain("falsegithub.com")
         
         XCTAssertEqual(domainOne, domainTwo)
         XCTAssertNotEqual(domainOne, domainFake)
     }
     
     func testRuleKindResource() {
-        let resourceOne = NetworkConstraint.resource(name: "index.html")
-        let resourceTwo = NetworkConstraint.resource(name: "index.html")
-        let resourceAbout = NetworkConstraint.resource(name: "about.html")
+        let resourceOne = Resource(path: "index.html")
+        let resourceTwo = Resource(path: "index.html")
+        let resourceAbout = Resource(path: "about.html")
         
         XCTAssertEqual(resourceOne, resourceTwo)
         XCTAssertNotEqual(resourceOne, resourceAbout)
     }
     
     func testRuleKindQuery() {
-        let queryKeyOne = NetworkConstraint.query(key: "api_key")
-        let queryKeyTwo = NetworkConstraint.query(key: "api_key")
-        let queryKeyPage = NetworkConstraint.query(key: "page")
+        let queryKeyOne = QueryItem(key: "api_key")
+        let queryKeyTwo = QueryItem(key: "api_key")
+        let queryKeyPage = QueryItem(key: "page")
         
         XCTAssertEqual(queryKeyOne, queryKeyTwo)
         XCTAssertNotEqual(queryKeyOne, queryKeyPage)
         
-        let queryKeyValueOne = NetworkConstraint.query(key: "api_key", value: "asdf")
-        let queryKeyValueTwo = NetworkConstraint.query(key: "api_key", value: "asdf")
-        let queryKeyValuePageOne = NetworkConstraint.query(key: "page", value: "1")
-        let queryKeyValuePageTwo = NetworkConstraint.query(key: "page", value: "2")
+        let queryKeyValueOne = QueryItem(key: "api_key", value: "asdf")
+        let queryKeyValueTwo = QueryItem(key: "api_key", value: "asdf")
+        let queryKeyValuePageOne = QueryItem(key: "page", value: "1")
+        let queryKeyValuePageTwo = QueryItem(key: "page", value: "2")
         
         XCTAssertEqual(queryKeyValueOne, queryKeyValueTwo)
         XCTAssertNotEqual(queryKeyValueOne, queryKeyValuePageOne)
@@ -50,17 +50,17 @@ final class RuleTests: XCTestCase {
     }
     
     func testRuleKindHeader() {
-        let headerKeyOne = NetworkConstraint.header(key: "Content-Type")
-        let headerKeyTwo = NetworkConstraint.header(key: "Content-Type")
-        let headerKeyPage = NetworkConstraint.header(key: "User-Agent")
+        let headerKeyOne = Header(key: "Content-Type")
+        let headerKeyTwo = Header(key: "Content-Type")
+        let headerKeyPage = Header(key: "User-Agent")
         
         XCTAssertEqual(headerKeyOne, headerKeyTwo)
         XCTAssertNotEqual(headerKeyOne, headerKeyPage)
         
-        let headerKeyValueOne = NetworkConstraint.header(key: "Content-Type", value: "application/json")
-        let headerKeyValueTwo = NetworkConstraint.header(key: "Content-Type", value: "application/json")
-        let headerKeyValuePageOne = NetworkConstraint.header(key: "User-Agent", value: "Gluon")
-        let headerKeyValuePageTwo = NetworkConstraint.header(key: "User-Agent", value: "OneApp")
+        let headerKeyValueOne = Header(key: "Content-Type", value: "application/json")
+        let headerKeyValueTwo = Header(key: "Content-Type", value: "application/json")
+        let headerKeyValuePageOne = Header(key: "User-Agent", value: "Gluon")
+        let headerKeyValuePageTwo = Header(key: "User-Agent", value: "OneApp")
         
         XCTAssertEqual(headerKeyValueOne, headerKeyValueTwo)
         XCTAssertNotEqual(headerKeyValueOne, headerKeyValuePageOne)
@@ -70,7 +70,7 @@ final class RuleTests: XCTestCase {
     }
     
     func testRuleKindSchemeMatch() {
-        let scheme = NetworkConstraint.scheme(value: "https")
+        let scheme = Scheme(value: "https")
         
         let githubRequest = self.makeGitHubURLRequest()
         
@@ -84,7 +84,7 @@ final class RuleTests: XCTestCase {
     }
     
     func testRuleKindDomainMatch() {
-        let domain = NetworkConstraint.domain(name: "github.blog")
+        let domain = Domain("github.blog")
         
         let githubRequest = self.makeGitHubURLRequest()
         
@@ -98,7 +98,7 @@ final class RuleTests: XCTestCase {
     }
     
     func testRuleKindResourceMath() {
-        let resource = NetworkConstraint.resource(name: "/category/engineering")
+        let resource = Resource(path: "/category/engineering")
         
         let githubRequest = self.makeGitHubURLRequest()
         
@@ -112,7 +112,7 @@ final class RuleTests: XCTestCase {
     }
     
     func testRuleKindQueryMatch() {
-        let query = NetworkConstraint.query(key: "api")
+        let query = QueryItem(key: "api")
         
         let githubRequest = self.makeGitHubURLRequest()
         
@@ -124,19 +124,19 @@ final class RuleTests: XCTestCase {
         result = query.match(request: unsecureRequest)
         XCTAssertFalse(result)
         
-        let queryValue = NetworkConstraint.query(key: "api", value: "asdf")
+        let queryValue = QueryItem(key: "api", value: "asdf")
         result = queryValue.match(request: githubRequest)
         
         XCTAssertTrue(result)
         
-        let queryValueFake = NetworkConstraint.query(key: "api", value: "1234")
+        let queryValueFake = QueryItem(key: "api", value: "1234")
         result = queryValueFake.match(request: githubRequest)
         
         XCTAssertFalse(result)
     }
     
     func testRuleKindHederMatch() {
-        let header = NetworkConstraint.header(key: "UserAgent")
+        let header = Header(key: "UserAgent")
         
         let githubRequest = self.makeGitHubURLRequest()
         
@@ -148,15 +148,26 @@ final class RuleTests: XCTestCase {
         result = header.match(request: unsecureRequest)
         XCTAssertFalse(result)
         
-        let headerValue = NetworkConstraint.header(key: "UserAgent", value: "Gluon")
+        let headerValue = Header(key: "UserAgent", value: "Gluon")
         result = headerValue.match(request: githubRequest)
         
         XCTAssertTrue(result)
         
-        let headerValueFake = NetworkConstraint.query(key: "UserAgent", value: "FakeClient")
+        let headerValueFake = Header(key: "UserAgent", value: "FakeClient")
         result = headerValueFake.match(request: githubRequest)
         
         XCTAssertFalse(result)
+    }
+    
+    func testConstrain() {
+        let constrainsts: [any Constraint] = [
+            Scheme(value: "https"),
+            Scheme(value: "https"),
+            Scheme(value: "http")
+        ]
+        
+        XCTAssertTrue(constrainsts[0].isEqualsTo(constrainsts[1]))
+        XCTAssertFalse(constrainsts[0].isEqualsTo(constrainsts[2]))
     }
 }
 
