@@ -10,6 +10,8 @@ import Foundation
 public protocol Actionable {
     var ruleID: RuleID { get }
     var isActive: Bool { get }
+    
+    var constraintCount: Int { get }
 
     func remove()
     func enable()

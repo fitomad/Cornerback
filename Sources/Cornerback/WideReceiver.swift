@@ -8,45 +8,52 @@
 import Foundation
 
 final class WideReceiver: URLProtocol {
-    enum Keys: CustomStringConvertible {
-        case tag
-        
-        var description: String {
-            let base = "WideReceiver.Keys"
-            
-            switch self {
-                case .tag:
-                    return "\(base).tag"
-            }
-        }
+    enum Keys {
+        static let tag = "WideReceiver.Keys.tag"
     }
+    
+    private var dataTask: URLSessionDataTask?
     
     override init(request: URLRequest, cachedResponse: CachedURLResponse?, client: URLProtocolClient?) {
         super.init(request: request, cachedResponse: cachedResponse, client: client)
-        print("\(#function) init")
     }
-    /*
-    override static func canInit(with task: URLSessionTask) -> Bool {
-        Cornerback.shared.checkRulesFor(request: task.currentRequest!)
-        print("\(#function)")
-        return false
-    }
-    */
+
     override static func canInit(with request: URLRequest) -> Bool {
-        guard URLProtocol.property(forKey: WideReceiver.Keys.tag.description, in: request) != nil else {
+        if URLProtocol.property(forKey: WideReceiver.Keys.tag, in: request) as? Bool == true {
             return false
         }
         
-        Cornerback.shared.checkRulesFor(request: request)
-        print("\(#function) request")
         return true
     }
     
+    override static func canonicalRequest(for request: URLRequest) -> URLRequest {
+        return request
+    }
+    
     override func startLoading() {
-        guard let mutableRequest = self.request as? NSMutableURLRequest else {
+        guard let mutableRequest = (self.request as NSURLRequest).mutableCopy() as? NSMutableURLRequest else {
             return
         }
         
-        URLProtocol.setProperty(true, forKey: WideReceiver.Keys.tag.description, in: mutableRequest)
+        URLProtocol.setProperty(true, forKey: WideReceiver.Keys.tag, in: mutableRequest)
+        
+        var modifiedRequest = mutableRequest as URLRequest
+        Cornerback.shared.applyRulesFor(request: &modifiedRequest)
+        
+        dataTask = URLSession.shared.dataTask(with: modifiedRequest, completionHandler: { data, response, error in
+            if let data = data, let response = response {
+                self.client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+                self.client?.urlProtocol(self, didLoad: data)
+            } else if let error = error {
+                self.client?.urlProtocol(self, didFailWithError: error)
+            }
+            self.client?.urlProtocolDidFinishLoading(self)
+        })
+        
+        dataTask?.resume()
+    }
+    
+    override func stopLoading() {
+        self.dataTask?.cancel()
     }
 }

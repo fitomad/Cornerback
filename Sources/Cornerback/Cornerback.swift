@@ -1,11 +1,12 @@
 import Foundation
 
-public typealias CornerbackAction = (URLRequest) -> Void
+public typealias CornerbackAction = (inout URLRequest) -> Void
 
 public final class Cornerback {
     public static let shared = Cornerback()
     
     private var rules: [Rule]
+    private var lock = DispatchSemaphore(value: 0)
     
     private init() {
         self.rules = [Rule]()
@@ -18,11 +19,16 @@ public final class Cornerback {
     
     @discardableResult
     public func newRuleWith(constraints: [any Constraint], performAction closure: @escaping CornerbackAction) -> some Actionable {
+        lock.signal()
+        
         let rule = Rule()
+        
         rule.constraints = constraints
         rule.associatedAction = closure
         
         self.rules.append(rule)
+        
+        lock.wait()
         
         return rule
     }
@@ -33,7 +39,9 @@ public final class Cornerback {
             return false
         }
         
+        lock.signal()
         self.rules.remove(at: ruleIndex)
+        lock.wait()
         
         return true
     }
@@ -89,22 +97,19 @@ public final class Cornerback {
         }
     }
     
-    func forRequest(_ request: URLRequest, performaAction closure: @escaping CornerbackAction) {
-        closure(request)
-    }
-    
-    
-    func checkRulesFor(request: URLRequest) {
+    func applyRulesFor(request: inout URLRequest) {
         let matchedRules = self.rules.filter { rule in
-            rule.constraints
+            let constraintsMatch = rule.constraints
                 .map { constraint in
                     constraint.match(request: request)
                 }
                 .reduce(true, { $0 && $1 })
+            
+            return (constraintsMatch && rule.isActive)
         }
         
         matchedRules.forEach { matchedRule in
-            matchedRule.associatedAction?(request)
+            matchedRule.associatedAction?(&request)
         }
     }
 }

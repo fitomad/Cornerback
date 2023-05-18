@@ -21,28 +21,81 @@ final class CornerbackTests: XCTestCase {
     func testCornerback() async throws {
         let cornerback = Cornerback.shared
         
-        let githubConstraints: [Constraint] = [
-            Scheme(value: "https"),
-            Domain(named: "github.blog")
+        let cornerbackConstraints: [Constraint] = [
+            Domain(named: "localhost"),
+            Resource(path: "/cornerback")
         ]
         
-        cornerback.newRuleWith(constraints: githubConstraints) { urlRequest in
-            print("Action")
+        let localConstraints: [Constraint] = [
+            Domain(named: "localhost")
+        ]
+        
+        cornerback.newRuleWith(constraints: cornerbackConstraints) { urlRequest in
+            print("🤘 \(urlRequest)")
+            urlRequest.setValue("Cornerback v1.0.0", forHTTPHeaderField: "X-Globant")
             
-            print(urlRequest)
+            XCTAssertTrue(true)
         }
         
-        let githubURL = try XCTUnwrap(URL(string: "https://github.blog/category/engineering/"))
+        cornerback.newRuleWith(constraints: localConstraints) { urlRequest in
+            print("🏠 \(urlRequest)")
+            
+            urlRequest.setValue("Gluon", forHTTPHeaderField: "X-Secret-Project")
+            XCTAssertTrue(true)
+        }
+        
+        let localURL = try XCTUnwrap(URL(string: "http://localhost:3000/cornerback"))
+        
         if #available(iOS 15.0, *) {
-            let (data, response) = try await URLSession.shared.data(from: githubURL)
+            let (data, response) = try await URLSession.shared.data(from: localURL)
             print(response)
         }
     }
+    
+    func testRuleEnableDisable() {
+        let cornerback = Cornerback.shared
+        
+        let cornerbackConstraints: [Constraint] = [
+            Domain(named: "localhost"),
+            Resource(path: "/cornerback")
+        ]
+        
+        let cornerbackRule = cornerback.newRuleWith(constraints: cornerbackConstraints) { urlRequest in
+            urlRequest.setValue("Cornerback v1.0.0", forHTTPHeaderField: "X-Globant")
+        }
+        
+        cornerbackRule.disable()
+        XCTAssertFalse(cornerbackRule.isActive)
+        
+        cornerbackRule.enable()
+        XCTAssertTrue(cornerbackRule.isActive)
+    }
+    
+    func testConstraintRemoval() {
+        let cornerback = Cornerback.shared
+        
+        let cornerbackConstraints: [Constraint] = [
+            Domain(named: "localhost"),
+            Resource(path: "/cornerback")
+        ]
+        
+        let cornerbackRule = cornerback.newRuleWith(constraints: cornerbackConstraints) { urlRequest in
+            urlRequest.setValue("Cornerback v1.0.0", forHTTPHeaderField: "X-Globant")
+        }
+        
+        XCTAssertEqual(cornerbackRule.constraintCount, 2)
+        
+        cornerbackRule.removeConstraint(Domain(named: "localhost"))
+        
+        XCTAssertEqual(cornerbackRule.constraintCount, 1)
+    }
 
-    func testPerformanceExample() throws {
+    func testCornerbackPerformance() throws {
         // This is an example of a performance test case.
         self.measure {
-            // Put the code you want to measure the time of here.
+            Task {
+                try await testCornerback()
+            }
         }
     }
 }
