@@ -23,7 +23,7 @@ final class RulesTests: XCTestCase {
         
         rule.constraints = [
             Scheme(value: "https"),
-            Domain("github.com")
+            Domain(named: "github.com")
         ]
         
         let actionable: Actionable = rule

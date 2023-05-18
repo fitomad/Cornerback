@@ -11,7 +11,7 @@ public struct Domain: Constraint {
     public let requestDomain: String
     public let excludeSubdomains: Bool
     
-    public init(_ value: String, excludeSubdomains exclude: Bool = true) {
+    public init(named value: String, excludeSubdomains exclude: Bool = true) {
         self.requestDomain = value
         self.excludeSubdomains = exclude
     }

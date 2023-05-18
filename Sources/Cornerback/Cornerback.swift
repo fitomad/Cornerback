@@ -22,6 +22,8 @@ public final class Cornerback {
         rule.constraints = constraints
         rule.associatedAction = closure
         
+        self.rules.append(rule)
+        
         return rule
     }
     

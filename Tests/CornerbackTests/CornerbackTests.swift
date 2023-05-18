@@ -18,16 +18,24 @@ final class CornerbackTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testCornerback() {
+    func testCornerback() async throws {
         let cornerback = Cornerback.shared
         
         let githubConstraints: [Constraint] = [
             Scheme(value: "https"),
-            Domain("github.blog")
+            Domain(named: "github.blog")
         ]
         
-        let githubRule = cornerback.newRuleWith(constraints: githubConstraints) { urlRequest in
+        cornerback.newRuleWith(constraints: githubConstraints) { urlRequest in
             print("Action")
+            
+            print(urlRequest)
+        }
+        
+        let githubURL = try XCTUnwrap(URL(string: "https://github.blog/category/engineering/"))
+        if #available(iOS 15.0, *) {
+            let (data, response) = try await URLSession.shared.data(from: githubURL)
+            print(response)
         }
     }
 
@@ -37,5 +45,4 @@ final class CornerbackTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
-
 }

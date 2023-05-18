@@ -12,9 +12,9 @@ final class ConstraintsTests: XCTestCase {
     }
     
     func testRuleKindDomain() {
-        let domainOne = Domain("github.com")
-        let domainTwo = Domain("github.com")
-        let domainFake = Domain("falsegithub.com")
+        let domainOne = Domain(named: "github.com")
+        let domainTwo = Domain(named: "github.com")
+        let domainFake = Domain(named: "falsegithub.com")
         
         XCTAssertEqual(domainOne, domainTwo)
         XCTAssertNotEqual(domainOne, domainFake)
@@ -84,7 +84,7 @@ final class ConstraintsTests: XCTestCase {
     }
     
     func testRuleKindDomainMatch() {
-        let domain = Domain("github.blog")
+        let domain = Domain(named: "github.blog")
         
         let githubRequest = self.makeGitHubURLRequest()
         
