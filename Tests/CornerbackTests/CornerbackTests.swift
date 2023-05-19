@@ -90,7 +90,7 @@ final class CornerbackTests: XCTestCase {
         XCTAssertEqual(cornerbackRule.constraintCount, 1)
     }
 
-    func testCornerbackPerformance() throws {
+    func testCornerbackPerformance() async throws {
         // This is an example of a performance test case.
         self.measure {
             Task {
