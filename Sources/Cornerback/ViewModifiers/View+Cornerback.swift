@@ -33,13 +33,3 @@ struct CornerbackModifier: ViewModifier {
         content
     }
 }
-
-@available(iOS 14.0, macOS 11.0, *)
-extension App {
-    public func networkRules(performClosure: CornerbackModifierClosure) -> Self {
-        performClosure(Cornerback.shared)
-        
-        return self
-    }
-}
-
