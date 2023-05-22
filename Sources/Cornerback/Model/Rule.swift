@@ -21,3 +21,21 @@ final class Rule {
         self.ruleID = ruleID
     }
 }
+
+extension Rule: CustomStringConvertible {
+    var description: String {
+        let constrainsDescription =  self.constraints
+                                         .map({ String(describing: $0) })
+                                         .joined(separator: "\n\t\t")
+        
+        let message = """
+        🏉 Rule (\(self.ruleID))
+            Is Active: \(self.isActive)
+            Associated Action: \(self.associatedAction == nil ? "false" : "true")
+            Constraints (\(self.constraintCount)):
+            \t\(constrainsDescription)
+        """
+        
+        return message
+    }
+}

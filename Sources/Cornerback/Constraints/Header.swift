@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Adolfo Vera Blasco on 17/5/23.
-//
-
 import Foundation
 
 public struct Header: Constraint {
@@ -36,5 +29,11 @@ public struct Header: Constraint {
 extension Header: Equatable {
     public static func ==(lhs: Self, rhs: Self) -> Bool {
         return (lhs.key == rhs.key) && (lhs.value == rhs.value)
+    }
+}
+
+extension Header: CustomStringConvertible {
+    public var description: String {
+        return "Header. Key: \"\(self.key)\" Value: \"\(self.value ?? "---")\""
     }
 }
