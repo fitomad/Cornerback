@@ -5,7 +5,7 @@ public typealias CornerbackAction = (inout URLRequest) -> Void
 public final class Cornerback {
     public static let shared = Cornerback()
     
-    private var rules: [Rule]
+    internal private(set) var rules: [Rule]
     private var lock = DispatchSemaphore(value: 0)
     
     private init() {
@@ -34,7 +34,7 @@ public final class Cornerback {
     }
     
     @discardableResult
-    public func removeRuleWith(ruleID: RuleID) -> Bool {
+    func removeRuleWith(ruleID: RuleID) -> Bool {
         guard let ruleIndex = self.rules.firstIndex(where: { $0.ruleID == ruleID }) else {
             return false
         }
@@ -47,7 +47,7 @@ public final class Cornerback {
     }
     
     @discardableResult
-    public func enableRuleWith(ruleID: RuleID) -> Bool {
+    func enableRuleWith(ruleID: RuleID) -> Bool {
         let selectedRule = self.rules.first(where: { rule in
             return rule.ruleID == ruleID
         })
@@ -62,7 +62,7 @@ public final class Cornerback {
     }
     
     @discardableResult
-    public func disableRuleWith(ruleID: RuleID) -> Bool {
+    func disableRuleWith(ruleID: RuleID) -> Bool {
         let selectedRule = self.rules.first(where: { rule in
             return rule.ruleID == ruleID
         })
@@ -76,8 +76,7 @@ public final class Cornerback {
         return false
     }
 
-    
-    public func appendConstraint(_ constraint: any Constraint, toRuleWithID ruleID: String) {
+    func appendConstraint(_ constraint: any Constraint, toRuleWithID ruleID: String) {
         let selectedRule = self.rules.first(where: { rule in
             rule.ruleID == ruleID
         })
@@ -87,7 +86,7 @@ public final class Cornerback {
         }
     }
     
-    public func removeConstraints(_ contraint: any Constraint, toRuleWithid ruleID: String) {
+    func removeConstraints(_ contraint: any Constraint, toRuleWithid ruleID: String) {
         let selectedRule = self.rules.first(where: { rule in
             rule.ruleID == ruleID
         })
@@ -97,7 +96,7 @@ public final class Cornerback {
         }
     }
     
-    func applyRulesFor(request: inout URLRequest) {
+    public func applyRulesFor(request: inout URLRequest) {
         let matchedRules = self.rules.filter { rule in
             let constraintsMatch = rule.constraints
                 .map { constraint in
