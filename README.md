@@ -79,7 +79,7 @@ Enabling and disabling operations will be helpful in conjuntion with the Feature
 
 Cornerback allow developers create new constraints. This can be done implementing the `Constraint` protocol, and the `Equatable` protocol too, that is mandatory by `Constraint` definition.
 
-
+We also recommend provide an implementation for the `CustomStringConvertible` protocol to bring a human readable (and developer friendly) `Cornerback` object current state.
 
 ## Server
 
