@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class WideReceiver: URLProtocol {
+public final class WideReceiver: URLProtocol {
     enum Keys {
         static let tag = "WideReceiver.Keys.tag"
     }
@@ -18,7 +18,7 @@ final class WideReceiver: URLProtocol {
         super.init(request: request, cachedResponse: cachedResponse, client: client)
     }
 
-    override static func canInit(with request: URLRequest) -> Bool {
+    override public static func canInit(with request: URLRequest) -> Bool {
         if URLProtocol.property(forKey: WideReceiver.Keys.tag, in: request) as? Bool == true {
             return false
         }
@@ -26,11 +26,11 @@ final class WideReceiver: URLProtocol {
         return true
     }
     
-    override static func canonicalRequest(for request: URLRequest) -> URLRequest {
+    override public static func canonicalRequest(for request: URLRequest) -> URLRequest {
         return request
     }
     
-    override func startLoading() {
+    override public func startLoading() {
         guard let mutableRequest = (self.request as NSURLRequest).mutableCopy() as? NSMutableURLRequest else {
             return
         }
@@ -53,7 +53,7 @@ final class WideReceiver: URLProtocol {
         dataTask?.resume()
     }
     
-    override func stopLoading() {
+    override public func stopLoading() {
         self.dataTask?.cancel()
     }
 }

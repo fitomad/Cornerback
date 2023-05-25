@@ -8,6 +8,10 @@ public final class Cornerback {
     private var rules: [Rule]
     private var lock = DispatchSemaphore(value: 0)
     
+    public var urlSessionConfigurationProtocolClass: AnyClass {
+        return WideReceiver.self
+    }
+    
     private init() {
         self.rules = [Rule]()
         URLProtocol.registerClass(WideReceiver.self)
