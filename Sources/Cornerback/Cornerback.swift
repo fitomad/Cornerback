@@ -5,7 +5,7 @@ public typealias CornerbackAction = (inout URLRequest) -> Void
 public final class Cornerback {
     public static let shared = Cornerback()
     
-    private var rules: [Rule]
+    internal private(set) var rules: [Rule]
     private var lock = DispatchSemaphore(value: 0)
     
     public var urlSessionConfigurationProtocolClass: AnyClass {

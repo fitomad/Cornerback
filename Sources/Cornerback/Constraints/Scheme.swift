@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Adolfo Vera Blasco on 17/5/23.
-//
-
 import Foundation
 
 public struct Scheme: Constraint {
@@ -29,6 +22,12 @@ public struct Scheme: Constraint {
 extension Scheme: Equatable {
     public static func ==(lhs: Self, rhs: Self) -> Bool {
         return lhs.requestScheme == rhs.requestScheme
+    }
+}
+
+extension Scheme: CustomStringConvertible {
+    public var description: String {
+        return "Scheme: \"\(self.requestScheme)\""
     }
 }
 

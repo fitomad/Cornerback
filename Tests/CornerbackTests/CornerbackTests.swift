@@ -89,6 +89,26 @@ final class CornerbackTests: XCTestCase {
         
         XCTAssertEqual(cornerbackRule.constraintCount, 1)
     }
+    
+    func testCornerbackDescription() {
+        let cornerback = Cornerback.shared
+        
+        let cornerbackConstraints: [Constraint] = [
+            Scheme(value: "https"),
+            Domain(named: "localhost"),
+            Resource(path: "/cornerback"),
+            QueryItem(key: "api_key"),
+            QueryItem(key: "page", value: "2"),
+            Header(key: "X-Cornerback"),
+            Header(key: "X-Cornerback", value: "Package SPM")
+        ]
+        
+        let cornerbackRule = cornerback.newRuleWith(constraints: cornerbackConstraints) { urlRequest in
+            urlRequest.setValue("Cornerback v1.0.0", forHTTPHeaderField: "X-Globant")
+        }
+        
+        print(cornerback)
+    }
 
     func testCornerbackPerformance() async throws {
         // This is an example of a performance test case.

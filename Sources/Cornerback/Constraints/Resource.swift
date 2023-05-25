@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Adolfo Vera Blasco on 17/5/23.
-//
-
 import Foundation
 
 public struct Resource: Constraint {
@@ -26,5 +19,11 @@ public struct Resource: Constraint {
 extension Resource: Equatable {
     public static func ==(lhs: Self, rhs: Self) -> Bool {
         return lhs.requestResource == rhs.requestResource
+    }
+}
+
+extension Resource: CustomStringConvertible {
+    public var description: String {
+        return "Resource: \"\(self.requestResource)\""
     }
 }

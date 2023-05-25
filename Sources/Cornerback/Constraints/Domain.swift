@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Adolfo Vera Blasco on 17/5/23.
-//
-
 import Foundation
 
 public struct Domain: Constraint {
@@ -33,4 +26,10 @@ public struct Domain: Constraint {
          return (lhs.requestDomain == rhs.requestDomain) && (lhs.excludeSubdomains == rhs.excludeSubdomains)
      }
  }
+
+extension Domain: CustomStringConvertible {
+    public var description: String {
+        return "Domain: \"\(self.requestDomain)\" Excluding domains: \(self.excludeSubdomains)"
+    }
+}
  

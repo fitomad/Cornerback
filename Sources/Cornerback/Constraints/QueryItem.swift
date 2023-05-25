@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Adolfo Vera Blasco on 17/5/23.
-//
-
 import Foundation
 
 public struct QueryItem: Constraint {
@@ -33,5 +26,11 @@ public struct QueryItem: Constraint {
 extension QueryItem: Equatable {
     public static func ==(lhs: Self, rhs: Self) -> Bool {
         return (lhs.key == rhs.key) && (lhs.value == rhs.value)
+    }
+}
+
+extension QueryItem: CustomStringConvertible {
+    public var description: String {
+        return "Query item. Key: \"\(self.key)\" Value: \"\(self.value ?? "---")\""
     }
 }
