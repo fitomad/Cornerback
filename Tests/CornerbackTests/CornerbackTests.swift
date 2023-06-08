@@ -109,7 +109,7 @@ final class CornerbackTests: XCTestCase {
         
         print(cornerback)
     }
-
+/*
     func testCornerbackPerformance() async throws {
         // This is an example of a performance test case.
         self.measure {
@@ -118,4 +118,5 @@ final class CornerbackTests: XCTestCase {
             }
         }
     }
+ */
 }

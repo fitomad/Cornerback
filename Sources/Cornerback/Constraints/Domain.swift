@@ -17,6 +17,10 @@ public struct Domain: Constraint {
             return false
         }
 
+        if excludeSubdomains {
+            return domain.contains(self.requestDomain)
+        }
+        
         return domain == self.requestDomain
     }
 }
